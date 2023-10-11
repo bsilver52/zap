@@ -1,0 +1,219 @@
+/**********************************************************
+* Project 3: Zap
+* Benjamin Silver
+* April 9, 2023
+* CS 15 Data Structures
+* README
+*
+**********************************************************
+
+A. Title and Author:
+Title: Project 3 Zap
+Author: Benjamin Silver
+
+B. Purpose
+The purpose of this program is to provide a program for the client that
+compresses text files and uncompresses zapped files
+
+C. Acknowledgements
+-TAs Hameedah and Tom helped me combat a Makefile error in which I was
+erroneously writing rules for HuffmanTreeNode.o and BinaryIO.o
+-TA Austen helped me debug an error in which the last char of a text file
+would not appear in my uncompressed text file
+-TA Luxi helped me think through the serialize function and visualize
+preorder tree traversal
+-Reading the documentation for the priority queue data structure better helped
+me understand their functionality:
+https://cplusplus.com/reference/queue/priority_queue/
+
+D. Files
+1. main.cpp: This is the driver file for the Zap program
+2. HuffmanCoder.cpp: This file allows the client to compress and decompress
+text files using the Huffman coding algorithm.
+3. HuffmanCoder.h: This file compresses and uncompresses text files
+4. HuffmanTreeNode.cpp: This file contains the data used to build the Huffman
+Tree
+5. HuffmanTreeNode.h: This file stores nodes used by the Huffman encoder and
+decoders
+6. BinaryIO.cpp: This file allows the client to write and read zap files
+7. BinaryIO.h: This file uses the strings assembled through encoding and
+decoding to convert between text and zap files
+8. unit_test.h: This file tests functions for the HuffmanTreeNode class
+9. Makefile
+
+The following files are a series of testing files. Because submitting all of
+them made my submission too large. I have only submitted files 9-13. However,
+I have provided descriptions of all of them below to demonstrate the extent of
+my testing
+
+10. banana_apple.txt: Text file of one word
+11. banAp.zap: Zapped banana_Apple.txt
+12. banAp.final: Unzapped version of the previous file
+13. banAp2.zap: Zapped banana_Apple.txt, using the reference implementation
+14. banAp2.final: Unzapped version of the previous file
+15. sentences.txt: Text file of many sentences
+16. sentences.zap: Zapped sentences.txt
+17. sentences.final: Unzapped version of the previous file
+18. sentences2.zap: Zapped sentences.txt, using the reference implementation
+19. sentences2.final: Unzapped version of the previous file
+20. ecoli.coli: Long text file of repeating characters
+21. coli.zap: Zapped ecoli.coli
+22. coli.final: Unzapped verision of the previous file
+23. coli2.zap: Zapped ecoli.coli, using the reference implementation
+24. coli2.final: Unzapped verision of the previous file
+25. works_of_shakespeare.txt: Long text file of Shakespeare literature
+26. shake.zap: Zapped works_of_shakespeare.txt
+27. shake.final: Unzapped version of the previous file
+28. shake2.zap: Zapped works_of_shakespeare.txt, using the reference
+implentation
+29. shake2.final: Unzapped version of the previous file
+
+E. Compiling and Running:
+     - Compile using
+            make zap
+     - Run executable with
+            ./zap [zap | unzap] inputFile outputFile
+*Note that the program yield an error messsage if additional command line
+arguments are provided or if any of the above arguments are specified
+incorrectly
+
+F. Data Structures and Algorithms
+The main data structure used during the assignment was the priority queue.
+Normal queues use a "first in, first out" approach in which elements can only
+be inserted at the back and accessed at the front. Priority queues, however,
+allow the user to assign some degree of preference to elements being stored.
+The priority determines the order in which the elements are accessed. A real
+world examples where this data structure is useful is for boarding planes.
+Typically, families with children, veterans, and persons with disabilities get
+to board the plane first. Priority must be quantified in this data structure,
+and my implementation uses a minimum priority queue to do so. In constructing
+a huffman tree, node frequency values are used to order nodes. Elements with
+the lowest frequency are removed from the queue and connected through a parent
+node containing the sum of their priority values. 
+
+Like all data structures used in this course, the priority queue has various
+advantages and disadvantage. Astated earlier, its intuitive mechanism for
+managing items with allows the user to build more dynamic, realistic queues.
+Elements can be accesessed efficiently in constant time. They also can be
+utilized with programmers of different skills, given that implementation
+can occur using a vector or a heap. A third advantages are its many
+applications, which include sorting and searching algorithims in addition to
+the airplane example described above. A limitation is that it can be difficult
+to remove an items not towards the top of the queue. Suppose a situation
+existed where on a particular day of the weak, certain people who receive
+priority in boarding airplanes did not fly. We could not simply "delete" these
+people from the queue, but rather would have to remove every previous member
+before reaching the desired elements. 
+
+It's worth noting that my priority queue uses an arraylist in its
+implementation. This data structure has been explored extensively in previous
+assignments, but I will briefly outline its characteristics in the interest of
+being thorough C++ vectors are useful due to their capacity to grow and shrink.
+The array does not actually change their size, but appears to do so for the
+client through pointers to heap-allocated arrays. This allows client to avoid
+thinking about memory allocation when interacting with this data structure.
+
+The priority queue allowed me to contruct a Huffman Tree, which uses a tree
+data structure. Trees allow us to quickly find, insert, and remove elements.
+They are useful in modelling hierarchical relationships where all nodes stem
+from the root node and parent nodes points to children nodes. Leaf nodes
+contain sentinels. In a huffman tree, leaf nodes contain characters from a text
+file and internal nodes contain the null character. All nodes contain
+frequencies, which are letter counts for leaf nodes and the sum of children
+node frequencies for internal nodes.
+  
+I will describe a few algorithms used in my implementationl. Firstly, I used an
+array to store character frequencies from text files. I initialized an integer
+array of size 256 because there are only 256 ASCII chars. I converted each
+character in a text file to its corresponding ASCII value and incrememented the
+integer at that position. In constructing the huffman tree I used another
+algorithm. First, I creaed nodes for positions in the array where the value was
+not equal to 0 and pushed these nodes into the priority queue. Then, I popped
+the nodes with the lowest frequencies, joined them with a parent node, and
+pushed that back into the queue. I repeated this processs until only one node
+remained in the queue and set that equal to the root private member variable.
+A final algorithm in my design occurred when decoding the binary strings. I
+iterated through the binary string and Huffman tree. For values in the binary
+string in which the position in the tree was a leaf, I appended its character
+to a string and moved back to the root of the tree. Otherwise, I traversed to
+the appropriate subtree. Finally, I checked to make sure the last character in
+the binary string was at a leaf and returned a string containing the file text.
+
+G. Testing
+The first component of my program that I wrote and tested was my
+HuffmanTreeNode class. I tested each function using the CS15 unit testing
+framework. First, I worte my two constructors and tested that each set the
+private member variables appropriately through getter and setter functions.
+Next, I wrote three functions to check if my isLeaf() function worked properly.
+I created one node with 2 nullpointers, one with just a left nullpointer, and
+one with 0 nullpointers. I ensured that only the first case returned true for
+isLeaf(). Finally, I tested my setters. In addition to making sure each could
+set values correctly, I also made sure that I could set values multiple times
+and return the correct node (through a getter function) afte the final change.
+
+I next moved onto testing the encoding component of this project. For this
+section, and the remainder of the assignment, I completed all of my testing
+through printing to the terminal and using diff to check the accuracy of my
+outputs. This framework is more comfortable for me using unit tests because
+the elements I am testing do not just reside in a single class. For count
+frequency, I first wrote a small file (5-10 chars) in which I could manually
+count frequencies. Then, I tested on larger files and files with strange ASCII
+characters (new lines, spaces, special characters) to ensure that my algorithm
+accounted for any valid character present in an input file. I took a brief
+detour to check a couple edge cases. I ensured my code printed the appropriate
+messages when command line arguments were incorrectly specified or the input
+file did not exist. Next, I built the huffman tree. To save time at this stage,
+I checked that only one node was left in the huffTree priority queue and that
+my root node private member variable had been initialized properly. While it
+may have been more thorough to print the entire huffman tree and check it
+with a huffman tree generator website, my implementation closely reflected what
+the spec outlined so I figured I would catch any tree construction errors in
+the serialization phase. Next, I generated character codes for files of a 3-5
+characters and 10-15 characters. To test their accuracy, I hand constructed a
+huffman tree and checked that the total number of bits of my tree matched the
+total number of bits required using the binary codes in my program. From here,
+I confidently proceeded to serializing the tree. Serialization accuracy was
+hard to test for larger files, as hand writing an entire preorder traversal of
+these trees felt like a poor use of my time. However, I created a text file
+whose Huffman tree might match the example on the spec and checked that the
+tree serializations matched. 
+
+For the first step of decoding, I checked that the string pair produced from
+reading in the zap files seemed plausible. Specifically, I ensured the first
+string contained lots of "I" and "L" values and that the second string only
+contained "0" and "1"s by examining the string on the terminal. Because I was
+confident in the accuracy of my tree serialization, I checked my deserialize
+function by deserializing the serialized string and then running my serialize
+function on the resulting tree to make sure that these strings matched. In
+testing my decoding function, I experiences my largest challenge throughout
+the project thus far. Because trees are a recursive data structure, I
+thought it would be smart to design this function recursively. However, my
+implementation was incredibly memory intensive because I returned something
+each time a letter was appended to my file string. The resulting file text was
+correct but did not run on files larger than the apple banana testing file.
+After seeking help in office hours, I changed my implentation to only append
+values rather than return an appended string. To check the accuracy of this
+new method. I printed the resulting string to the console for small and large
+files. The accuracy of small files was relatively easy to check, but for large
+files, I examined if the beginning and end of the text looked correct. I moved
+on confidently, knowing that I would catch any errors through diff testing in
+the next step.
+
+To be blunt, I diffed tested very extensively for this assignment. I tested 
+thoroughly on five different text files of varying length and structure, but
+this number does not include the various text files I used early in testing
+individual functions (such as count frequencies). For each file, I underwent
+the following steps:
+
+1. Use my program to create a zapped file from a text file
+2. Uncompress this zap file
+3. Use diff to compare the input text file with a text file produce through
+zapping and unzapping
+4. Generate a zapped file from a text file using the reference implentation
+5. Generate an uncompressed file from this zapped file
+6. Diff test the resulting file from the reference implementation with the the
+output file produced in step 3
+
+I. Time Spent
+This assignent took me a while, but I worked on it in small chunks. Between
+the two phases and this read me, I would estimate it at 17-18 hours.
