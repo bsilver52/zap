@@ -23,7 +23,7 @@ B. Compiling and Running:
             make zap
      - Run executable with
             ./zap [zap | unzap] inputFile outputFile
-*Note that the program yield an error messsage if additional command line
+*Note that the program yields an error messsage if additional command line
 arguments are provided or if any of the above arguments are specified
 incorrectly
 
